@@ -17,7 +17,7 @@ function Register() {
     return(
         <>
             <Header>
-                <Link className="header__link" to="/login">Войти</Link>
+                <Link className="header__link" to="/sign-in">Войти</Link>
             </Header>
             <form className="form form_type_login">
                 <h2 className="form__title form__title_type_login">Регистрация</h2>
