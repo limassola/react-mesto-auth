@@ -1,0 +1,13 @@
+.form__button_type_login {
+    background-color: rgba(255, 255, 255, 1);
+    border-radius: 2px;
+    padding: 14px 84px;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 22px;
+    text-align: center;
+    margin-bottom: 15px;
+    color: #000000;
+}

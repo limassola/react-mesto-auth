@@ -1,5 +1,8 @@
 import React from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import '../index.css';
+import Login from './Login';
+import Register from './Register';
 import Header from './Header';
 import Main from './Main';
 import Footer from './Footer';
@@ -14,6 +17,7 @@ function App() {
     const [isEditProfilePopupOpen, setOpenProfilePopup] = React.useState(false);
     const [isAddPlacePopupOpen, setOpenPlacePopup] = React.useState(false);
     const [isEditAvatarPopupOpen, setOpenAvatarPopup] = React.useState(false);
+    const [isAuthenticated, setAuthenticated] = React.useState(false)
 
     const [selectedCard, setSelectedCard] = React.useState(null);
     
@@ -124,21 +128,25 @@ function App() {
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
-        <Header/>
-        <Main onEditProfile={handleOpenEditPopup} onAddPlace={handleOpenPlacePopup} onEditAvatar={handleOpenProfilePopup} onCardClick={handleCardClick} cards={cards} onCardLike={handleCardLike} onCardDelete={handleCardDelete}/>
-        <Footer/>
+        {isAuthenticated ? <Header/> : null}
+        <Routes>
+            <Route path='/sign-in' element={<Login/>}/>
+            <Route path='/sign-up' element={<Register/>}/>
+            {/* <Main onEditProfile={handleOpenEditPopup} onAddPlace={handleOpenPlacePopup} onEditAvatar={handleOpenProfilePopup} onCardClick={handleCardClick} cards={cards} onCardLike={handleCardLike} onCardDelete={handleCardDelete}/> */}
+        </Routes>
+        {isAuthenticated ? <Footer/> : null}
+            <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser}/>
+            
 
-        <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser}/>
+            {/* <PopupWithForm name='delete' title='Вы уверены?' isOpen={}>
+                <h2 className="form__title form__title_type_delete">Вы уверены?</h2>
+                <button type="submit" className="button form__button">Да</button>
+            </PopupWithForm> */}
+            <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlace={handleAddPlaceSubmit}/>
+            <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar}/>
+            <ImagePopup card={selectedCard} onClose={closeAllPopups} />
         
-
-        {/* <PopupWithForm name='delete' title='Вы уверены?' isOpen={}>
-            <h2 className="form__title form__title_type_delete">Вы уверены?</h2>
-            <button type="submit" className="button form__button">Да</button>
-        </PopupWithForm> */}
-        <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlace={handleAddPlaceSubmit}/>
-        <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar}/>
-        <ImagePopup card={selectedCard} onClose={closeAllPopups} />
-        </CurrentUserContext.Provider>
+            </CurrentUserContext.Provider>
   );
 }
 
