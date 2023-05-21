@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useNavigate} from 'react-router-dom';
 import '../index.css';
 import Login from './Login';
 import Register from './Register';
@@ -22,6 +22,7 @@ function App() {
     const [loggedIn, setloggedIn] = React.useState(false);
     const [userData, setUserData] = React.useState('');
     const navigate = useNavigate();
+  
 
     const [selectedCard, setSelectedCard] = React.useState(null);
     
@@ -62,7 +63,14 @@ function App() {
 
     React.useEffect(() => {
         tokenCheck();
-    }, [])
+    }, []);
+
+    function signOut(){
+        localStorage.removeItem('jwt');
+        navigate('/sign-in');
+        setloggedIn(false)
+      }
+
 
     function closeAllPopups() {
         setOpenProfilePopup(false);
@@ -154,10 +162,10 @@ function App() {
   return (
     <CurrentUserContext.Provider value={currentUser}>
         {loggedIn ? 
-        <Header >
+        <Header signOut={signOut}>
             <div className='header__container'>
-                <p className='header__link'>{userData}</p>
-                <p className='header__link'>Выйти</p>
+                <p className='header__item'>{userData}</p>
+                <a onClick={signOut} className='header__link'>Выйти</a>
             </div>
         </Header> : null}
         <Routes>
