@@ -1,0 +1,11 @@
+.popup__title_type_info {
+    font-family: Inter;
+    line-height: 29px;
+    text-align: center;
+    vertical-align: top;
+    color: #000;
+    font-size: 24px;
+    font-weight: 900;
+    text-align: center;
+    margin-top: 32px;
+}

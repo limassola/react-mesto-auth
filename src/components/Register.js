@@ -3,6 +3,7 @@ import Header from "./Header";
 import { Link, useNavigate } from "react-router-dom";
 import { signup } from "./Auth";
 import '../index.css';
+import InfoTooltip from './InfoTooltip'
 
 
 function Register() {
@@ -11,6 +12,8 @@ function Register() {
         email: ''
     })
     const navigate = useNavigate();
+    const [isSuccess, setSuccess] = React.useState(false);
+    const [isInfoTooltipOpen, setInfoTooltipOpen] = React.useState(false)
 
     const handleChange = (e) => {
         const {name, value} = e.target;
@@ -26,9 +29,16 @@ function Register() {
         const {password, email} = formValue;
         signup(password, email)
         .then(() => {
-            navigate('/sign-in')
+            setSuccess(true)
+            setInfoTooltipOpen(true)
         })
         .catch(err => console.log(err))
+    }
+
+    function handleClosePopup() {
+        setInfoTooltipOpen(false)
+        setSuccess(false)
+        navigate('/sign-in')
     }
     return(
         <>
@@ -58,6 +68,7 @@ function Register() {
                 <button type="submit"  className="form__button form__button_type_login">Зарегистрироваться</button>
                 <Link className="form__link" to="/sign-in">Уже зарегистрированы? Войти</Link>
             </form>
+            <InfoTooltip isSuccess={isSuccess} isOpen={isInfoTooltipOpen} onClose={handleClosePopup}/>
         </>
     )
 }

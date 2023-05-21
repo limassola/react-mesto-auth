@@ -14,6 +14,7 @@ import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
 import { checkValidity } from './Auth';
+import InfoTooltip from './InfoTooltip';
 
 function App() {
     const [isEditProfilePopupOpen, setOpenProfilePopup] = React.useState(false);
