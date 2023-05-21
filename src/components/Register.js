@@ -1,41 +1,61 @@
 import React from "react";
 import Header from "./Header";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { signup } from "./Auth";
+import '../index.css';
 
 
 function Register() {
-    const [email, setEmail] = React.useState('');
-    const [password, setPassword] = React.useState('');
+    const [formValue, setFormValue] = React.useState({
+        password: '',
+        email: ''
+    })
+    const navigate = useNavigate();
 
-    function handleChangeEmail(event) {
-        setEmail(event.target.value)
-    }
+    const handleChange = (e) => {
+        const {name, value} = e.target;
+    
+        setFormValue({
+          ...formValue,
+          [name]: value
+        });
+      }
 
-    function handleChangePassword(event) {
-        setPassword(event.target.value)
+    function handleSubmit(event) {
+        event.preventDefault()
+        const {password, email} = formValue;
+        signup(password, email)
+        .then(() => {
+            navigate('/sign-in')
+        })
+        .catch(err => console.log(err))
     }
     return(
         <>
             <Header>
                 <Link className="header__link" to="/sign-in">Войти</Link>
             </Header>
-            <form className="form form_type_login">
+            <form className="form form_type_login" onSubmit={handleSubmit}>
                 <h2 className="form__title form__title_type_login">Регистрация</h2>
                 <input 
                 className="form__item form__item_type_email"
                 type="email"
                 placeholder="Email"
-                value={email}
-                onChange={handleChangeEmail}
+                value={formValue.email}
+                name="email"
+                onChange={handleChange}
+                required
                 />
                 <input
                 className="form__item form__item_type_password"
                 type="password"
                 placeholder="Пароль"
-                value={password}
-                onChange={handleChangePassword}
+                value={formValue.password}
+                name="password"
+                onChange={handleChange}
+                required
                 />
-                <button type="submit" className="form__button form__button_type_login">Зарегистрироваться</button>
+                <button type="submit"  className="form__button form__button_type_login">Зарегистрироваться</button>
                 <Link className="form__link" to="/sign-in">Уже зарегистрированы? Войти</Link>
             </form>
         </>

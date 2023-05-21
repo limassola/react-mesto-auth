@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import '../index.css';
 import Login from './Login';
 import Register from './Register';
+import ProtectedRouteElement from './ProtectedRoute';
 import Header from './Header';
 import Main from './Main';
 import Footer from './Footer';
@@ -128,25 +129,31 @@ function App() {
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
-        {isAuthenticated ? <Header/> : null}
+        {isAuthenticated ? 
+        <Header>
+            <div className='header__container'>
+                <p className='header__link'>email@mail.com</p>
+                <p className='header__link'>Выйти</p>
+            </div>
+        </Header> : null}
         <Routes>
             <Route path='/sign-in' element={<Login/>}/>
             <Route path='/sign-up' element={<Register/>}/>
-            {/* <Main onEditProfile={handleOpenEditPopup} onAddPlace={handleOpenPlacePopup} onEditAvatar={handleOpenProfilePopup} onCardClick={handleCardClick} cards={cards} onCardLike={handleCardLike} onCardDelete={handleCardDelete}/> */}
+            <Route path='/' element={<ProtectedRouteElement element={Main} isAuthenticated={isAuthenticated}  onEditProfile={handleOpenEditPopup} onAddPlace={handleOpenPlacePopup} onEditAvatar={handleOpenProfilePopup} onCardClick={handleCardClick} cards={cards} onCardLike={handleCardLike} onCardDelete={handleCardDelete}/>}/>
         </Routes>
         {isAuthenticated ? <Footer/> : null}
-            <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser}/>
+        <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser}/>
             
 
             {/* <PopupWithForm name='delete' title='Вы уверены?' isOpen={}>
                 <h2 className="form__title form__title_type_delete">Вы уверены?</h2>
                 <button type="submit" className="button form__button">Да</button>
             </PopupWithForm> */}
-            <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlace={handleAddPlaceSubmit}/>
-            <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar}/>
-            <ImagePopup card={selectedCard} onClose={closeAllPopups} />
+        <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlace={handleAddPlaceSubmit}/>
+        <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar}/>
+        <ImagePopup card={selectedCard} onClose={closeAllPopups} />
         
-            </CurrentUserContext.Provider>
+        </CurrentUserContext.Provider>
   );
 }
 
