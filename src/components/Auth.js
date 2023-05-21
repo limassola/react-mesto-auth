@@ -8,7 +8,7 @@ export const signup = (password, email) => {
         },
         body: JSON.stringify({password, email})
     })
-    .then(res => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`));
+    .then(res => handleResponse(res));
     
 }
 
@@ -20,7 +20,7 @@ export const signin = (password, email) => {
         },
         body: JSON.stringify({password, email})
     })
-    .then(res => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`));
+    .then(res => handleResponse(res));
 }
 
 export const checkValidity = (token) => {
@@ -31,5 +31,13 @@ export const checkValidity = (token) => {
             "Authorization" : `Bearer ${token}`
         }
     })
-    .then(res => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`));
+    .then(res => handleResponse(res));
+}
+
+function handleResponse(res) {
+    if(res.ok){
+        return res.json();
+        }
+
+        return Promise.reject(`Ошибка: ${res.status}`);
 }

@@ -6,14 +6,12 @@ import '../index.css';
 import InfoTooltip from './InfoTooltip'
 
 
-function Register() {
+function Register({registration}) {
     const [formValue, setFormValue] = React.useState({
         password: '',
         email: ''
     })
-    const navigate = useNavigate();
-    const [isSuccess, setSuccess] = React.useState(false);
-    const [isInfoTooltipOpen, setInfoTooltipOpen] = React.useState(false)
+    
 
     const handleChange = (e) => {
         const {name, value} = e.target;
@@ -27,19 +25,10 @@ function Register() {
     function handleSubmit(event) {
         event.preventDefault()
         const {password, email} = formValue;
-        signup(password, email)
-        .then(() => {
-            setSuccess(true)
-            setInfoTooltipOpen(true)
-        })
-        .catch(err => console.log(err))
+        registration(password, email)
     }
 
-    function handleClosePopup() {
-        setInfoTooltipOpen(false)
-        setSuccess(false)
-        navigate('/sign-in')
-    }
+
     return(
         <>
             <Header>
@@ -68,7 +57,6 @@ function Register() {
                 <button type="submit"  className="form__button form__button_type_login">Зарегистрироваться</button>
                 <Link className="form__link" to="/sign-in">Уже зарегистрированы? Войти</Link>
             </form>
-            <InfoTooltip isSuccess={isSuccess} isOpen={isInfoTooltipOpen} onClose={handleClosePopup}/>
         </>
     )
 }

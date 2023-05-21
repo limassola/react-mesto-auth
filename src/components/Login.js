@@ -2,23 +2,14 @@ import React from "react";
 import Header from "./Header";
 import { Link, useNavigate } from "react-router-dom";
 import '../index.css';
-import { signin } from "./Auth";
-import InfoTooltip from './InfoTooltip'
 
 
-function Login({handleLogin}) {
+
+function Login({login}) {
     const [formValue, setFormValue] = React.useState({
         password: '',
         email: ''
     })
-
-    const navigate = useNavigate();
-    const [isSuccess, setSuccess] = React.useState(false);
-    const [isInfoTooltipOpen, setInfoTooltipOpen] = React.useState(false)
-
-    function handleClosePopup() {
-        setInfoTooltipOpen(false)
-    }
 
     const handleChange = (e) => {
         const {name, value} = e.target;
@@ -33,19 +24,7 @@ function Login({handleLogin}) {
         e.preventDefault();
 
         const {email, password} = formValue;
-        signin(password, email)
-        .then((data) => {
-            if(data.token) {
-                localStorage.setItem('jwt', data.token)
-                handleLogin()
-                navigate('/')
-            }
-        })
-        .catch((err) => {
-            console.log(err)
-            setSuccess(false)
-            setInfoTooltipOpen(true)
-        })
+        login(password, email)
     }
 
     return(
@@ -75,7 +54,6 @@ function Login({handleLogin}) {
                 />
                 <button type="submit" className="form__button form__button_type_login">Войти</button>
             </form>
-            <InfoTooltip isSuccess={isSuccess} isOpen={isInfoTooltipOpen} onClose={handleClosePopup}/>
         </>
     )
 }
