@@ -1,40 +1,67 @@
 import React from "react";
 import Header from "./Header";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import '../index.css';
+import { signin } from "./Auth";
 
 
-function Login() {
-    const [email, setEmail] = React.useState('');
-    const [password, setPassword] = React.useState('');
+function Login({handleLogin}) {
+    const [formValue, setFormValue] = React.useState({
+        password: '',
+        email: ''
+    })
 
-    function handleChangeEmail(event) {
-        setEmail(event.target.value)
+    const navigate = useNavigate();
+
+    const handleChange = (e) => {
+        const {name, value} = e.target;
+    
+        setFormValue({
+          ...formValue,
+          [name]: value
+        });
     }
 
-    function handleChangePassword(event) {
-        setPassword(event.target.value)
+    function handleSubmit(e) {
+        e.preventDefault();
+
+        const {email, password} = formValue;
+        signin(password, email)
+        .then((data) => {
+            if(data.token) {
+                console.log(data)
+                localStorage.setItem('jwt', data.token)
+                handleLogin()
+                navigate('/')
+            }
+        })
+        .catch(err => console.log(err))
     }
+
     return(
         <>
             <Header>
                 <Link className="header__link" to="/sign-up">Регистрация</Link>
             </Header>
-            <form className="form form_type_login">
+            <form className="form form_type_login" onSubmit={handleSubmit}>
                 <h2 className="form__title form__title_type_login">Вход</h2>
                 <input 
                 className="form__item form__item_type_email"
                 type="email"
                 placeholder="Email"
-                value={email}
-                onChange={handleChangeEmail}
+                value={formValue.email}
+                name="email"
+                required
+                onChange={handleChange}
                 />
                 <input
                 className="form__item form__item_type_password"
                 type="password"
                 placeholder="Пароль"
-                value={password}
-                onChange={handleChangePassword}
+                value={formValue.password}
+                name="password"
+                required
+                onChange={handleChange}
                 />
                 <button type="submit" className="form__button form__button_type_login">Войти</button>
             </form>

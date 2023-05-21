@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import '../index.css';
 import Login from './Login';
 import Register from './Register';
@@ -13,12 +13,15 @@ import {CurrentUserContext} from '../contexts/CurrentUserContext'
 import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
+import { checkValidity } from './Auth';
 
 function App() {
     const [isEditProfilePopupOpen, setOpenProfilePopup] = React.useState(false);
     const [isAddPlacePopupOpen, setOpenPlacePopup] = React.useState(false);
     const [isEditAvatarPopupOpen, setOpenAvatarPopup] = React.useState(false);
-    const [isAuthenticated, setAuthenticated] = React.useState(false)
+    const [loggedIn, setloggedIn] = React.useState(false);
+    const [userData, setUserData] = React.useState('');
+    const navigate = useNavigate();
 
     const [selectedCard, setSelectedCard] = React.useState(null);
     
@@ -38,7 +41,28 @@ function App() {
 
     function handleCardClick(selectedCard){
         setSelectedCard(selectedCard)
-    } 
+    }
+    
+    function handleLogin() {
+        setloggedIn(true)
+    }
+
+    function tokenCheck() {
+        const jwt = localStorage.getItem('jwt');
+        if (jwt) {
+            checkValidity(jwt)
+            .then((user) => {
+                handleLogin()
+                setUserData(user.data.email)
+                navigate('/')
+            })
+            .catch(err => console.log(err))
+        }
+    }
+
+    React.useEffect(() => {
+        tokenCheck();
+    }, [])
 
     function closeAllPopups() {
         setOpenProfilePopup(false);
@@ -129,19 +153,20 @@ function App() {
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
-        {isAuthenticated ? 
-        <Header>
+        {loggedIn ? 
+        <Header >
             <div className='header__container'>
-                <p className='header__link'>email@mail.com</p>
+                <p className='header__link'>{userData}</p>
                 <p className='header__link'>Выйти</p>
             </div>
         </Header> : null}
         <Routes>
-            <Route path='/sign-in' element={<Login/>}/>
+            <Route path='/' element={<ProtectedRouteElement element={Main} loggedIn={loggedIn}  onEditProfile={handleOpenEditPopup} onAddPlace={handleOpenPlacePopup} onEditAvatar={handleOpenProfilePopup} onCardClick={handleCardClick} cards={cards} onCardLike={handleCardLike} onCardDelete={handleCardDelete}/>}/>
+            <Route path='/sign-in' element={<Login handleLogin={handleLogin}/>}/>
             <Route path='/sign-up' element={<Register/>}/>
-            <Route path='/' element={<ProtectedRouteElement element={Main} isAuthenticated={isAuthenticated}  onEditProfile={handleOpenEditPopup} onAddPlace={handleOpenPlacePopup} onEditAvatar={handleOpenProfilePopup} onCardClick={handleCardClick} cards={cards} onCardLike={handleCardLike} onCardDelete={handleCardDelete}/>}/>
+            <Route path='/' element={loggedIn ? <Navigate to='/'/> : <Navigate to='/login' replace/>}/>
         </Routes>
-        {isAuthenticated ? <Footer/> : null}
+        {loggedIn ? <Footer/> : null}
         <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser}/>
             
 
