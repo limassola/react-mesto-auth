@@ -10,3 +10,11 @@
     color: #FFFFFF;
 
 }
+
+@media screen and (max-width:768px) {
+    .form__title_type_login {
+        margin-bottom: 40px;
+        font-size: 20px;
+        line-height: 24px;
+    }
+}
